@@ -1,18 +1,9 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
-        mavenCentral()
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-
-    }
-
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.neoforged.gradle' version '[6.0.13, 6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
-apply plugin: 'net.minecraftforge.gradle'
 repositories{
     maven {
         name = "CurseForge"
@@ -34,11 +25,8 @@ repositories{
         }
     }
 }
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
 
-version = '1.4.0-1.20'
+version = '1.4.1-1.20'
 group = 'com.github.alexthe668' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'cloudstorage'
 
@@ -107,10 +95,12 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.20-46.0.12'
+    minecraft 'net.neoforged:forge:1.20.1-47.1.79'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    compileOnly fg.deobf("curse.maven:citadel-331936:4576429")
-    runtimeOnly fg.deobf("curse.maven:citadel-331936:4576429")
+    compileOnly fg.deobf("curse.maven:citadel-331936:4848887")
+    runtimeOnly fg.deobf("curse.maven:citadel-331936:4848887")
+    runtimeOnly fg.deobf("curse.maven:sophcore-618298:4808231")
+    runtimeOnly fg.deobf("curse.maven:sophstore-619320:4808065")
 }
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
@@ -133,8 +123,6 @@ mixin {
     config 'citadel.mixins.json'
     config 'cloudstorage.mixins.json'
 }
-apply plugin: 'org.spongepowered.mixin'
-
 
 mixin {
     add sourceSets.main, "cloudstorage.refmap.json"

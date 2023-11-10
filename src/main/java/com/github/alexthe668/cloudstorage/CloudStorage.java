@@ -18,6 +18,8 @@ import com.github.alexthe668.cloudstorage.world.CSStructureRegistry;
 import com.github.alexthe668.cloudstorage.world.CSVillageStructureRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -31,6 +33,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +50,7 @@ public class CloudStorage
     public static final SimpleChannel NETWORK_WRAPPER;
     private static final String PROTOCOL_VERSION = Integer.toString(1);
     public static final CSConfig CONFIG;
+	public static final TagKey<Block> WHITELISTED_BLOCKS = TagKey.create(ForgeRegistries.BLOCKS.getRegistryKey(), new ResourceLocation(MODID, "whitelist"));
     private static final ForgeConfigSpec CONFIG_SPEC;
 
     static {

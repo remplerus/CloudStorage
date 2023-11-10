@@ -19,6 +19,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
@@ -286,7 +287,32 @@ public class BalloonItem extends Item implements DyeableLeatherItem, CustomTabBe
                 cargo.setBalloonUUID(balloon.getUUID());
                 balloon.setChildId(cargo.getUUID());
                 level.setBlock(blockpos, blockstate.getFluidState().createLegacyBlock(), 3);
-            }
+            } else if (level.getBlockEntity(blockpos).getBlockState().is(CloudStorage.WHITELISTED_BLOCKS)) {
+				BlockEntity te = level.getBlockEntity(blockpos);
+				BalloonCargoEntity cargo = BalloonCargoEntity.createCargo(level, blockpos, blockstate, te.saveWithoutMetadata());
+				CompoundTag tag = te.saveWithFullMetadata();
+				if (tag.contains("storageWrapper")) {
+					if (tag.getCompound("storageWrapper").contains("contents")) {
+						if (tag.getCompound("storageWrapper").getCompound("contents").contains("inventory")) {
+							tag = tag.getCompound("storageWrapper").getCompound("contents").getCompound("inventory");
+						}
+					}
+					Container container = new SimpleContainer(tag.getInt("Size"));
+					for (int i = 0; i < container.getContainerSize(); i++) {
+						CompoundTag itemTag = tag.getList("Items", 10).getCompound(i);
+						ItemStack stack = ItemStack.of(itemTag);
+						container.setItem(i, stack);
+					}
+					cargo.copyContainerData(container);
+				}
+				if (player != null) {
+					cargo.setPlayerUUID(player.getUUID());
+				}
+				level.removeBlockEntity(blockpos);
+				cargo.setBalloonUUID(balloon.getUUID());
+				balloon.setChildId(cargo.getUUID());
+				level.setBlock(blockpos, blockstate.getFluidState().createLegacyBlock(), 3);
+			}
             if (!level.isClientSide) {
                 level.gameEvent(player, GameEvent.ENTITY_PLACE, blockpos);
             }
